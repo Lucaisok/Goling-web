@@ -1,25 +1,16 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Home from './components/Home';
+import UserVerification from './components/UserVerification';
+import { useSelector } from 'react-redux';
+import { RootState } from './store/store';
 
 function App() {
+  const isLoggedIn = useSelector((state: RootState) => state.user.loggedIn);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {isLoggedIn ? <Home /> : <UserVerification />}
+    </>
   );
 }
 
