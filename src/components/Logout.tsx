@@ -4,7 +4,8 @@ import { userLoggedOut } from "../features/user/userSlice";
 export default function Logout() {
     const dispatch = useDispatch();
 
-    const logout = async () => {
+    const logout = () => {
+        console.log("click");
         localStorage.clear();
         dispatch(userLoggedOut());
     };
