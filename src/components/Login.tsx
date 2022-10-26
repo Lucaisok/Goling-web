@@ -4,6 +4,7 @@ import fetchWithInterval from "../utils/fetchWithInterval";
 import { useDispatch } from 'react-redux';
 import { userLoggedIn } from '../features/user/userSlice';
 import Spinner from "./Spinner";
+import { Link } from "react-router-dom";
 
 export default function Login() {
     const [userInput, setUserInput] = useState({ username: '', password: '' });
@@ -92,6 +93,7 @@ export default function Login() {
                 <input type="text" placeholder="Username" onChange={(elem) => updateUsername(elem)} />
                 <input type="password" placeholder="Password" onChange={(elem) => updatePassword(elem)} />
                 <button onClick={login}>LOGIN</button>
+                <p><Link to={"/signup"}>Signup</Link> or Reset Password</p>
             </div>
         </div>
     );

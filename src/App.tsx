@@ -1,14 +1,14 @@
 import './App.css';
 import { useState, useEffect } from 'react';
-import Home from './components/Home';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
-import Login from './components/Login';
 import getUserData from './utils/getUserData';
 import { userLoggedIn } from './features/user/userSlice';
 import { useDispatch } from 'react-redux';
 import Spinner from "./components/Spinner";
 import getToken from './utils/getTokens';
+import AppRouter from './router/AppRouter';
+import AuthRouter from './router/AuthRouter';
 
 
 function App() {
@@ -51,7 +51,7 @@ function App() {
 
   return (
     <>
-      {loading ? <Spinner /> : (isLoggedIn ? <Home /> : <Login />)}
+      {loading ? <Spinner /> : (isLoggedIn ? <AppRouter /> : <AuthRouter />)}
     </>
   );
 }

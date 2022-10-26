@@ -20,3 +20,10 @@ interface TokensResponse {
     token: string;
     refreshToken: string;
 }
+
+interface SignupResponse {
+    existing_username?: object;
+    id?: number;
+    token?: string;
+    refresh_token?: string;
+}
