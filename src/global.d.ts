@@ -9,3 +9,9 @@ interface LoginResponse {
 }
 
 type UserVerification = "succeeded" | "failed" | null;
+
+interface UserData {
+    first_name: string;
+    last_name: string;
+    username: string;
+}

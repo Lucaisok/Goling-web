@@ -1,25 +1,54 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 import Home from './components/Home';
-import UserVerification from './components/UserVerification';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
+import Login from './components/Login';
+import getUserData from './utils/getUserData';
+import { userLoggedIn } from './features/user/userSlice';
+import { useDispatch } from 'react-redux';
+import Spinner from "./components/Spinner";
+
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(Boolean);
-  const user = useSelector((state: RootState) => state.user.loggedIn);
-  const locStorage = localStorage.getItem("userId");
-  //on a new browser session logout does not work since redux is already empty and useEffect does not fire. Find solution
+  const [loading, setLoading] = useState(true);
+  const hasState = useSelector((state: RootState) => state.user.loggedIn);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("useeff run");
-    setIsLoggedIn(user);
+    //run twice, check it out
 
-  }, [isLoggedIn, user, locStorage]);
+    if (hasState) {
+      setIsLoggedIn(true);
+      setLoading(false);
+
+    } else {
+      const userId = localStorage.getItem("userId");
+      const tokens = localStorage.getItem("tokens");
+
+      if (userId && tokens) {
+        (async () => {
+          const parsedUserId = JSON.parse(userId);
+          const parsedTokens = JSON.parse(tokens);
+
+          const data = await getUserData(parsedTokens, parsedUserId) as UserData;
+          dispatch(userLoggedIn({ id: JSON.stringify(parsedUserId), username: data.username, first_name: data.first_name, last_name: data.last_name }));
+
+        })();
+
+      } else {
+        setIsLoggedIn(false);
+        setLoading(false);
+
+      }
+    }
+
+  }, [isLoggedIn, hasState, dispatch]);
 
   return (
     <>
-      {isLoggedIn ? <Home /> : <UserVerification />}
+      {loading ? <Spinner /> : (isLoggedIn ? <Home /> : <Login />)}
     </>
   );
 }
