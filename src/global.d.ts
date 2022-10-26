@@ -15,3 +15,8 @@ interface UserData {
     last_name: string;
     username: string;
 }
+
+interface TokensResponse {
+    token: string;
+    refreshToken: string;
+}

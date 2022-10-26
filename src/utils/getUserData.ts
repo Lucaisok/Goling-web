@@ -1,7 +1,7 @@
 import address from '../addressConfig';
 import fetchWithInterval from '../utils/fetchWithInterval';
 
-export default async function getUserData(parsedTokens: { token: string, refresh_token: string; }, parsedUserId: number) {
+export default async function getUserData(token: string, parsedUserId: number) {
 
     try {
 
@@ -11,7 +11,7 @@ export default async function getUserData(parsedTokens: { token: string, refresh
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
-                    "authorization": parsedTokens.token
+                    "authorization": token
                 },
                 body: JSON.stringify({
                     parsedUserId

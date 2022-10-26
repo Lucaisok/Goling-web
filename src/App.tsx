@@ -8,6 +8,7 @@ import getUserData from './utils/getUserData';
 import { userLoggedIn } from './features/user/userSlice';
 import { useDispatch } from 'react-redux';
 import Spinner from "./components/Spinner";
+import getToken from './utils/getTokens';
 
 
 function App() {
@@ -25,16 +26,18 @@ function App() {
 
     } else {
       const userId = localStorage.getItem("userId");
-      const tokens = localStorage.getItem("tokens");
 
-      if (userId && tokens) {
+      if (userId) {
+        const parsedUserId = JSON.parse(userId);
+
         (async () => {
-          const parsedUserId = JSON.parse(userId);
-          const parsedTokens = JSON.parse(tokens);
+          const token = await getToken();
 
-          const data = await getUserData(parsedTokens, parsedUserId) as UserData;
-          dispatch(userLoggedIn({ id: JSON.stringify(parsedUserId), username: data.username, first_name: data.first_name, last_name: data.last_name }));
+          if (token) {
+            const data = await getUserData(token, parsedUserId) as UserData;
+            dispatch(userLoggedIn({ id: JSON.stringify(parsedUserId), username: data.username, first_name: data.first_name, last_name: data.last_name }));
 
+          }
         })();
 
       } else {

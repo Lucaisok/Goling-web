@@ -50,6 +50,8 @@ export default function Login() {
                     const refresh_token = data.refresh_token;
 
                     localStorage.setItem("userId", JSON.stringify(data.id));
+                    localStorage.setItem("username", JSON.stringify(username));
+                    //we could avoid storing the username but need to change how we create the tokens on the server and use Id instead.
                     localStorage.setItem("tokens", JSON.stringify({ token, refresh_token }));
                     setUserInput({ username: "", password: "" });
 
