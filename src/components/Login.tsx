@@ -93,7 +93,7 @@ export default function Login() {
                 <input type="text" placeholder="Username" onChange={(elem) => updateUsername(elem)} />
                 <input type="password" placeholder="Password" onChange={(elem) => updatePassword(elem)} />
                 <button onClick={login}>LOGIN</button>
-                <p><Link to={"/signup"}>Signup</Link> or Reset Password</p>
+                <p><Link to={"/signup"}>Signup</Link> or <Link to={"/reset_password"}>Reset Password</Link></p>
             </div>
         </div>
     );

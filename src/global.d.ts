@@ -27,3 +27,8 @@ interface SignupResponse {
     token?: string;
     refresh_token?: string;
 }
+
+interface ServerResponse {
+    success: boolean;
+    serverError: boolean;
+}
