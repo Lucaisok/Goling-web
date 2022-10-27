@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import Spinner from '../components/Spinner';
 import CheckVerificationCode from './CheckVerificationCode';
-import GetVerificationCode from './getVerificationCode';
-import UpdatePassword from './updatePassword';
+import GetVerificationCode from './GetVerificationCode';
+import UpdatePassword from './UpdatePassword';
 import PasswordUpdated from './PasswordUpdated';
+
 
 export default function ResetPassword() {
     const [error, setError] = useState("");
