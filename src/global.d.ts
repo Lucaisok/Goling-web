@@ -32,3 +32,7 @@ interface ServerResponse {
     success: boolean;
     serverError: boolean;
 }
+
+interface Usernames {
+    username: string;
+}

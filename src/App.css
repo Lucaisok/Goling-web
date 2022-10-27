@@ -214,4 +214,20 @@ button {
   box-sizing: content-box;
 }
 
+.userContainer {
+  margin: auto;
+  width: 100%;
+  height: 10%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: 0.5px solid #315477;
+  padding-left: 10px;
+  cursor: pointer;
+}
+
+.userContainer:hover {
+  background-color: rgba(49, 84, 119, 0.5);
+}
+
 
