@@ -11,8 +11,7 @@ html,body, #root {
   height: 100%;  
 }
 
-.pageTitile {
-  /* padding: 30px; */
+.pageTitle {
   font-size: 50px;
   text-align: center;
   color: #FDFCF6;
@@ -64,5 +63,155 @@ button {
   align-items: center;
 }
 
+.HomeContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.leftCol {
+  width: 30%;
+  height: 100%;
+  background-color: #597591;
+}
+
+.rightCol {
+  width: 70%;
+  height: 100%;
+}
+
+.topBar {
+  width: 100%;
+  height: 10%;
+  background-color: #315477;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rightBar {
+  border-left: 0.5px solid #597591;
+}
+
+.leftSide {
+  width: 50%;
+  height: 100%;
+  padding-left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.rightSide {
+  width: 50%;
+  height: 100%;
+  padding-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.logoutButton {
+  width: 100%;
+  margin-bottom: 0;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.username {
+  color: #FDFCF6;
+}
+
+.searchFieldContainer {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* border-bottom: 1px solid #7ca2c7; */
+}
+
+.searchField {
+  width: 70%;
+  height: 50%;
+  border-radius: 4px;
+  border: none;
+  background-color: aliceblue;
+  color: #315477;
+  padding-left: 10px;
+  font-weight: bold;
+}
+
+.searchField::placeholder {
+  color: #315477;
+  font-weight: bold;
+}
+
+.listContainer {
+  width: 100%;
+  height: 90%;
+  /* background-color: #7ca2c7; */
+  overflow-y: scroll;
+}
+
+.chatBody {
+  height: 80%;
+  width: 100%;
+  background-color: aliceblue;
+}
+
+.chatInputContainer {
+  width: 100%;
+  height: 10%;
+  background-color: #315477;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.textFieldContainer {
+  height: 100%;
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sendButtonContainer {
+  height: 100%;
+  width: 20%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.chatInput {
+  width: 90%;
+  height: 50%;
+  background-color: aliceblue;
+  border-radius: 4px;
+  border: none;
+  color: #315477;
+  padding-left: 10px;
+  font-weight: bold;
+}
+
+.chatInput::placeholder {
+  color: #315477;
+  font-weight: bold;
+}
+
+.chatButton {
+  width: 80%;
+  height: 49%;
+  border-radius: 4px;
+  border: none;
+  background-color: #597591;
+  color: aliceblue;
+  margin: 0;
+  box-sizing: content-box;
+}
 
 

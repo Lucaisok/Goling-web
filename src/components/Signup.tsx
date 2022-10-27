@@ -110,7 +110,7 @@ export default function Signup() {
         <div className="loginContainer">
             {loading &&
                 <Spinner />}
-            <h1 className="pageTitile">Goling</h1>
+            <h1 className="pageTitle">Goling</h1>
             <div className="loginFormContainer">
                 {error && <p className='error'>{error}</p>}
                 <input

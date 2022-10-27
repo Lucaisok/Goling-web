@@ -20,7 +20,7 @@ export default function ResetPassword() {
         <div className="loginContainer">
             {loading &&
                 <Spinner />}
-            <h1 className="pageTitile">Goling</h1>
+            <h1 className="pageTitle">Goling</h1>
             {!codeSent && !codeVerified && <GetVerificationCode setCodeSent={setCodeSent} email={email} setEmail={setEmail} setLoading={setLoading} error={error} setError={setError} />}
             {codeSent && !codeVerified && <CheckVerificationCode setCodeSent={setCodeSent} email={email} setLoading={setLoading} error={error} setError={setError} setCodeVerified={setCodeVerified} />}
             {codeVerified && !passwordUpdated && <UpdatePassword email={email} setLoading={setLoading} error={error} setError={setError} password={password} setPassword={setPassword} repeatedPassword={repeatedPassword} setRepeatedPassword={setRepeatedPassword} setPasswordUpdated={setPasswordUpdated} />}
