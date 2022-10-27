@@ -12,13 +12,13 @@ export default function Login() {
     const [error, setError] = useState("");
     const dispatch = useDispatch();
 
-    const updateUsername = (elem: any) => {
-        const username = elem.target.value;
+    const updateUsername = (e: any) => {
+        const username = e.target.value;
         setUserInput({ ...userInput, username });
     };
 
-    const updatePassword = (elem: any) => {
-        const password = elem.target.value;
+    const updatePassword = (e: any) => {
+        const password = e.target.value;
         setUserInput({ ...userInput, password });
     };
 

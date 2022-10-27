@@ -14,29 +14,29 @@ export default function Signup() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const updateUsername = (elem: any) => {
+    const updateUsername = (e: any) => {
         setError("");
-        setUserInput({ ...userInput, username: elem.target.value });
+        setUserInput({ ...userInput, username: e.target.value });
     };
 
-    const updateFirstName = (elem: any) => {
+    const updateFirstName = (e: any) => {
         setError("");
-        setUserInput({ ...userInput, first_name: elem.target.value });
+        setUserInput({ ...userInput, first_name: e.target.value });
     };
 
-    const updateLastName = (elem: any) => {
+    const updateLastName = (e: any) => {
         setError("");
-        setUserInput({ ...userInput, last_name: elem.target.value });
+        setUserInput({ ...userInput, last_name: e.target.value });
     };
 
-    const updatePassword = (elem: any) => {
+    const updatePassword = (e: any) => {
         setError("");
-        setUserInput({ ...userInput, password: elem.target.value });
+        setUserInput({ ...userInput, password: e.target.value });
     };
 
-    const updateEmail = (elem: any) => {
+    const updateEmail = (e: any) => {
         setError("");
-        setUserInput({ ...userInput, email: elem.target.value });
+        setUserInput({ ...userInput, email: e.target.value });
     };
 
     const signup = async () => {
