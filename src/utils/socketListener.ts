@@ -5,8 +5,6 @@ export let socket: Socket;
 
 export async function socketListener(username: string, setOnlineUsers: any) {
 
-    console.log("socketListener fires");
-
     socket = io(address, { transports: ["websocket"], query: { username } });
 
     socket.onAny((event) => {
@@ -24,6 +22,10 @@ export async function socketListener(username: string, setOnlineUsers: any) {
 
     socket.on("private message", ({ content, from }) => {
         console.log("Private Message!!! content: ", content, "from: ", from);
+    });
+
+    socket.on("socket-duplicate", () => {
+        window.location.reload();
     });
 
 }
