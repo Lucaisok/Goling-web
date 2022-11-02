@@ -36,3 +36,8 @@ interface ServerResponse {
 interface Usernames {
     username: string;
 }
+
+interface OnlineUser {
+    socketId: string;
+    username: string;
+}
