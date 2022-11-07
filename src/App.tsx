@@ -35,7 +35,7 @@ function App() {
 
           if (token) {
             const data = await getUserData(token, parsedUserId) as UserData;
-            dispatch(userLoggedIn({ id: JSON.stringify(parsedUserId), username: data.username, first_name: data.first_name, last_name: data.last_name }));
+            dispatch(userLoggedIn({ id: JSON.stringify(parsedUserId), username: data.username, first_name: data.first_name, last_name: data.last_name, language: data.language }));
 
           }
         })();

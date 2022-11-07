@@ -6,9 +6,10 @@ import { useDispatch } from 'react-redux';
 import { userLoggedIn } from '../features/user/userSlice';
 import validEmail from '../utils/validEmail';
 import { Link, useNavigate } from 'react-router-dom';
+import SelectLanguage from './SelectLanguage';
 
 export default function Signup() {
-    const [userInput, setUserInput] = useState({ username: '', password: '', first_name: '', last_name: '', email: '' });
+    const [userInput, setUserInput] = useState({ username: '', password: '', first_name: '', last_name: '', email: '', language: '' });
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
@@ -40,12 +41,13 @@ export default function Signup() {
     };
 
     const signup = async () => {
-        if (userInput.username !== "" && userInput.password !== "" && userInput.first_name !== "" && userInput.last_name !== "" && userInput.email) {
+        if (userInput.username !== "" && userInput.password !== "" && userInput.first_name !== "" && userInput.last_name !== "" && userInput.email && userInput.language !== "") {
             const username = userInput.username.trim();
             const password = userInput.password.trim();
             const first_name = userInput.first_name.trim();
             const last_name = userInput.last_name.trim();
             const email = userInput.email.trim();
+            const language = userInput.language;
 
             if (!validEmail(email)) {
                 setError('Please insert a valid email address');
@@ -62,7 +64,7 @@ export default function Signup() {
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                username, password, first_name, last_name, email
+                                username, password, first_name, last_name, email, language
                             })
                         });
                     };
@@ -81,9 +83,9 @@ export default function Signup() {
                         //we could avoid storing the username but need to change how we create the tokens on the server and use Id instead.
                         localStorage.setItem("tokens", JSON.stringify({ token, refresh_token }));
 
-                        setUserInput({ username: '', password: '', first_name: '', last_name: '', email: '' });
+                        setUserInput({ username: '', password: '', first_name: '', last_name: '', email: '', language: '' });
 
-                        dispatch(userLoggedIn({ id: data.id, username, first_name, last_name }));
+                        dispatch(userLoggedIn({ id: data.id, username, first_name, last_name, language }));
 
                         navigate("/");
 
@@ -117,6 +119,7 @@ export default function Signup() {
                     placeholder="Username"
                     onChange={(elem) => updateUsername(elem)}
                 />
+                <SelectLanguage setError={setError} setUserInput={setUserInput} userInput={userInput} />
                 <input
                     placeholder="First Name"
                     onChange={(elem) => updateFirstName(elem)}

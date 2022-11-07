@@ -56,7 +56,7 @@ export default function Login() {
                     localStorage.setItem("tokens", JSON.stringify({ token, refresh_token }));
                     setUserInput({ username: "", password: "" });
 
-                    dispatch(userLoggedIn({ id: data.id, username, first_name: data.first_name, last_name: data.last_name }));
+                    dispatch(userLoggedIn({ id: data.id, username, first_name: data.first_name, last_name: data.last_name, language: data.language }));
 
                 } else if (data.wrong_username) {
                     setError("This username does not exist, please try again");

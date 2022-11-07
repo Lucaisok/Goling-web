@@ -20,7 +20,7 @@ export async function socketListener(username: string, setOnlineUsers: any) {
         setOnlineUsers(users);
     });
 
-    socket.on("private message", ({ content, from }) => {
+    socket.on("message", ({ content, from }) => {
         console.log("Private Message!!! content: ", content, "from: ", from);
     });
 

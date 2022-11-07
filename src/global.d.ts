@@ -6,6 +6,7 @@ interface LoginResponse {
     refresh_token: string;
     wrong_username: any;
     wrong_password: any;
+    language: string;
 }
 
 type UserVerification = "succeeded" | "failed" | null;
@@ -14,6 +15,7 @@ interface UserData {
     first_name: string;
     last_name: string;
     username: string;
+    language: string;
 }
 
 interface TokensResponse {
@@ -40,4 +42,9 @@ interface Usernames {
 interface OnlineUser {
     socketId: string;
     username: string;
+}
+
+interface Language {
+    code: string;
+    name: string;
 }

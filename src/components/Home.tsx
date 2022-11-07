@@ -7,6 +7,7 @@ import getToken from "../utils/getTokens";
 import fetchWithInterval from "../utils/fetchWithInterval";
 import { uid } from 'uid';
 import { socket, socketListener } from "../utils/socketListener";
+import UpdateLanguage from "./UpdateLanguage";
 
 export default function Home() {
     const user = useSelector((state: RootState) => state.user);
@@ -22,7 +23,25 @@ export default function Home() {
         socket.emit('join-room', { username, chatPartner: e.target.innerText, room });
     };
 
-    const sendMessage = () => {
+    const sendMessage = async () => {
+
+        const serverCall = () => {
+            return fetch("https://libretranslate.de/detect", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    q: message
+                })
+            });
+        };
+
+        const data = await fetchWithInterval(serverCall);
+
+        console.log("data", data);
+
         console.log(chatPartner?.socketId);
         console.log("send mess", message);
         socket.emit("message", {
@@ -32,32 +51,34 @@ export default function Home() {
     };
 
     useEffect(() => {
+        console.log("user", user);
+        if (username) {
+            socketListener(username, setOnlineUsers); //initialize socket
 
-        socketListener(username, setOnlineUsers); //initialize socket
+            //retrieve all users, just for ex.
+            (async () => {
 
-        //retrieve all users, just for ex.
-        (async () => {
+                const token = await getToken();
 
-            const token = await getToken();
+                if (token) {
 
-            if (token) {
+                    const serverCall = () => {
+                        return fetch(address + "/get-users", {
+                            method: 'GET',
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json',
+                                "authorization": token
+                            }
+                        });
+                    };
 
-                const serverCall = () => {
-                    return fetch(address + "/get-users", {
-                        method: 'GET',
-                        headers: {
-                            Accept: 'application/json',
-                            'Content-Type': 'application/json',
-                            "authorization": token
-                        },
-                    });
-                };
+                    const data = await fetchWithInterval(serverCall) as Usernames[];
 
-                const data = await fetchWithInterval(serverCall) as Usernames[];
-
-                setUsers(data);
-            }
-        })();
+                    setUsers(data);
+                }
+            })();
+        }
     }, [username]);
 
     return (
@@ -66,6 +87,8 @@ export default function Home() {
                 <div className="topBar">
                     <div className="leftSide">
                         <p className="username"><strong>{user.username}</strong></p>
+                        <p className="username" style={{ marginLeft: "10px" }}>{user.language}</p>
+                        <UpdateLanguage />
                     </div>
                     <div className="rightSide">
                         {/* general menu, with logout inside */}
