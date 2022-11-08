@@ -156,10 +156,51 @@ button {
   overflow-y: scroll;
 }
 
+.slideMenu {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-color: #315477; 
+  border-top: 1px solid #597591; 
+  border-right: 1px solid #597591
+}
+
+.slide {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  animation-name: slide;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+
+}
+
+.slideBack {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  animation-name: slide-back;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+
+}
+
+@keyframes slide {
+  from {right: 0}
+  to {right : 50%}
+}
+
+@keyframes slide-back {
+  from {right: 50%}
+  to {right : 0}
+}
+
 .chatBody {
   height: 80%;
   width: 100%;
   background-color: aliceblue;
+  position: relative;
+  z-index: 2;
 }
 
 .chatInputContainer {
@@ -169,6 +210,8 @@ button {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
+  z-index: 2;
 }
 
 .textFieldContainer {
@@ -226,8 +269,36 @@ button {
   cursor: pointer;
 }
 
+.hamburgerMenu {
+  cursor: pointer;
+}
+
 .userContainer:hover {
   background-color: rgba(49, 84, 119, 0.5);
 }
 
+.rotate {
+  animation-name: rotate;
+  animation-duration: 1s;
+  animation-direction: alternate;
+  animation-fill-mode: forwards;
+
+}
+
+.rotateBack {
+  animation-name: rotate-back;
+  animation-duration: 1s;
+  animation-direction: alternate;
+  animation-fill-mode: forwards;
+}
+
+@keyframes rotate {
+  from {transform: rotate(0deg);}
+  to {transform : rotate(90deg)}
+}
+
+@keyframes rotate-back {
+  from {transform: rotate(90deg);}
+  to {transform : rotate(0deg)}
+}
 

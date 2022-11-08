@@ -8,6 +8,10 @@ import fetchWithInterval from "../utils/fetchWithInterval";
 import { uid } from 'uid';
 import { socket, socketListener } from "../utils/socketListener";
 import UpdateLanguage from "./UpdateLanguage";
+import { FaBars } from "react-icons/fa";
+import { IconContext } from "react-icons";
+
+type SlideMenu = null | boolean;
 
 export default function Home() {
     const user = useSelector((state: RootState) => state.user);
@@ -16,6 +20,7 @@ export default function Home() {
     const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
     const [chatPartner, setChatPartner] = useState<OnlineUser>();
     const [message, setMessage] = useState("");
+    const [openMenu, setOpenMenu] = useState<SlideMenu>(null);
 
     const openRoom = (e: any) => {
         setChatPartner(onlineUsers.find((obj) => obj.username === e.target.innerText));
@@ -79,7 +84,7 @@ export default function Home() {
                 }
             })();
         }
-    }, [username]);
+    }, [user, username]);
 
     return (
         <div className="HomeContainer">
@@ -91,26 +96,35 @@ export default function Home() {
                         <UpdateLanguage />
                     </div>
                     <div className="rightSide">
-                        {/* general menu, with logout inside */}
-                        <Logout />
+                        <div onClick={() => setOpenMenu(!openMenu)} className={openMenu === null ? "" : openMenu ? "rotate" : "rotateBack"}>
+                            <IconContext.Provider value={{ color: "white", size: "1.5em", className: "hamburgerMenu" }}>
+                                <FaBars />
+                            </IconContext.Provider>
+                            {/* <Logout /> */}
+                        </div>
                     </div>
                 </div>
-                <div className="searchFieldContainer">
-                    <input className="searchField" type="text" placeholder="Search Contact" />
-                </div>
-                <div className="listContainer">
-                    {/* map of the chat chronology and search results */}
-                    {users && users.map((usr, idx) => {
-                        if (usr.username !== user.username) {
-                            return (
-                                <div key={idx} className="userContainer" onClick={(e) => openRoom(e)}>
-                                    <p className="username" style={onlineUsers.some((contactObj: OnlineUser) => contactObj.username === usr.username) ? { color: "white" } : { color: "red", opacity: 0.5 }}>{usr.username}</p>
-                                </div>
-                            );
-                        } else {
-                            return null;
-                        }
-                    })}
+                <div style={{ height: "inherit", display: "flex", justifyContent: "center", alignItems: "center", width: "200%" }}>
+                    <div style={{ height: "inherit", width: "100%" }}>
+                        <div className="searchFieldContainer">
+                            <input className="searchField" type="text" placeholder="Search Contact" />
+                        </div>
+                        <div className="listContainer">
+                            {/* map of the chat chronology and search results */}
+                            {users && users.map((usr, idx) => {
+                                if (usr.username !== user.username) {
+                                    return (
+                                        <div key={idx} className="userContainer" onClick={(e) => openRoom(e)}>
+                                            <p className="username" style={onlineUsers.some((contactObj: OnlineUser) => contactObj.username === usr.username) ? { color: "white" } : { color: "red", opacity: 0.5 }}>{usr.username}</p>
+                                        </div>
+                                    );
+                                } else {
+                                    return null;
+                                }
+                            })}
+                        </div>
+                    </div>
+                    <div className={(openMenu === null ? "slideMenu" : openMenu === false ? "slideBack slideMenu" : "slide slideMenu")}></div>
                 </div>
             </div>
             <div className="rightCol">
