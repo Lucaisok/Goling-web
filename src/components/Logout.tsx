@@ -12,7 +12,7 @@ export default function Logout() {
     };
 
     return (
-        <div>
+        <div id='logoutButtonContainer'>
             <button className='logoutButton' onClick={logout}>LOGOUT</button>
         </div>
     );

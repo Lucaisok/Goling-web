@@ -61,7 +61,7 @@ export default function UpdateLanguage() {
     });
 
     return (
-        <select onChange={updateLanguage}>
+        <select onChange={updateLanguage} className="updateLanguageSelect">
             <option>Language</option>
             {languagesList.map((language, idx) => {
                 return (

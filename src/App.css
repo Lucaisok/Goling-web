@@ -113,11 +113,17 @@ button {
   justify-content: flex-end;
 }
 
+#logoutButtonContainer {
+  height: 100% ;
+}
+
 .logoutButton {
   width: 100%;
+  height: 100%;
   margin-bottom: 0;
-  border-radius: 4px;
   padding: 10px;
+  border-radius: 0%;
+  background-color: white;
 }
 
 .username {
@@ -162,7 +168,21 @@ button {
   position: relative;
   background-color: #315477; 
   border-top: 1px solid #597591; 
-  border-right: 1px solid #597591
+  border-right: 1px solid #597591;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.slideMenu div {
+  width: 100%;
+  height: 9%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: 0.5px solid #597591;
+  cursor: pointer;
 }
 
 .slide {
@@ -300,5 +320,18 @@ button {
 @keyframes rotate-back {
   from {transform: rotate(90deg);}
   to {transform : rotate(0deg)}
+}
+
+.updateLanguageSelect {
+  width: 100%;
+    height: 100%;
+    border: none;
+    padding-left: 10px;
+    font-size: 25;
+    font-weight: bold;
+    box-sizing: border-box;
+    color: #394b5d;
+    border-radius: 0%;
+    margin-bottom: 0%;
 }
 

@@ -93,14 +93,12 @@ export default function Home() {
                     <div className="leftSide">
                         <p className="username"><strong>{user.username}</strong></p>
                         <p className="username" style={{ marginLeft: "10px" }}>{user.language}</p>
-                        <UpdateLanguage />
                     </div>
                     <div className="rightSide">
                         <div onClick={() => setOpenMenu(!openMenu)} className={openMenu === null ? "" : openMenu ? "rotate" : "rotateBack"}>
                             <IconContext.Provider value={{ color: "white", size: "1.5em", className: "hamburgerMenu" }}>
                                 <FaBars />
                             </IconContext.Provider>
-                            {/* <Logout /> */}
                         </div>
                     </div>
                 </div>
@@ -124,7 +122,14 @@ export default function Home() {
                             })}
                         </div>
                     </div>
-                    <div className={(openMenu === null ? "slideMenu" : openMenu === false ? "slideBack slideMenu" : "slide slideMenu")}></div>
+                    <div className={(openMenu === null ? "slideMenu" : openMenu === false ? "slideBack slideMenu" : "slide slideMenu")}>
+                        <div>
+                            <UpdateLanguage />
+                        </div>
+                        <div>
+                            <Logout />
+                        </div>
+                    </div>
                 </div>
             </div>
             <div className="rightCol">
