@@ -336,3 +336,27 @@ button {
     border-bottom: 1px solid #394b5d;
 }
 
+.messageRow {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.messageRow p {
+  margin: 0;
+}
+
+.ownMessage {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.partnerMessage {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+

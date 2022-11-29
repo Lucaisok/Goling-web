@@ -21,6 +21,7 @@ export default function Home() {
     const [chatPartner, setChatPartner] = useState<OnlineUser>();
     const [message, setMessage] = useState("");
     const [openMenu, setOpenMenu] = useState<SlideMenu>(null);
+    const [chat, setChat] = useState<Message[]>([]);
 
     const openRoom = (e: any) => {
         setChatPartner(onlineUsers.find((obj) => obj.username === e.target.innerText)); //should not be just for online users.
@@ -46,18 +47,20 @@ export default function Home() {
         const data = await fetchWithInterval(serverCall) as DetectLanguageResult[];
         //add checks here
         const messageLanguage = data[0].language;
-        console.log(chatPartner?.socketId);
-        console.log("send mess", message);
+
         socket.emit("message", {
             content: message,
             language: messageLanguage,
             to: chatPartner?.username
         });
+
+        setChat([...chat, { content: message, sender: username }]);
+        setMessage("");
     };
 
     useEffect(() => {
         if (username) {
-            socketListener(username, setOnlineUsers); //initialize socket
+            socketListener(username, setOnlineUsers, setChat); //initialize socket
 
             //retrieve all users, just for ex.
             (async () => {
@@ -142,10 +145,17 @@ export default function Home() {
                 </div>
                 <div className="chatBody">
                     {/* Here the body of the Chat */}
+                    {chat && chat.map((msg, idx) => {
+                        return (
+                            <div key={idx} className={"messageRow " + (msg.sender === username ? "ownMessage" : "partnerMessage")}>
+                                <p>{msg.content}</p>
+                            </div>
+                        );
+                    })}
                 </div>
                 <div className="chatInputContainer">
                     <div className="textFieldContainer">
-                        <input disabled={!chatPartner} className="chatInput" type="text" placeholder="Write a message..." onChange={(e) => setMessage(e.target.value)} />
+                        <input disabled={!chatPartner} className="chatInput" type="text" placeholder="Write a message..." onChange={(e) => setMessage(e.target.value)} value={message} />
                     </div>
                     <div className="sendButtonContainer">
                         <button disabled={!chatPartner} className="chatButton" onClick={sendMessage}>SEND</button>

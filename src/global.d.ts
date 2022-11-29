@@ -53,3 +53,8 @@ interface DetectLanguageResult {
     confidence: number;
     language: string;
 }
+
+interface Message {
+    content: string;
+    sender: string;
+}
