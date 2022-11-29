@@ -58,7 +58,7 @@ export default function UpdateLanguage() {
             }
 
         })();
-    });
+    }, []);
 
     return (
         <select onChange={updateLanguage} className="updateLanguageSelect">

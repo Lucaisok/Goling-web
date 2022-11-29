@@ -23,7 +23,7 @@ export default function Home() {
     const [openMenu, setOpenMenu] = useState<SlideMenu>(null);
 
     const openRoom = (e: any) => {
-        setChatPartner(onlineUsers.find((obj) => obj.username === e.target.innerText));
+        setChatPartner(onlineUsers.find((obj) => obj.username === e.target.innerText)); //should not be just for online users.
         const room = uid();
         socket.emit('join-room', { username, chatPartner: e.target.innerText, room });
     };
@@ -43,20 +43,19 @@ export default function Home() {
             });
         };
 
-        const data = await fetchWithInterval(serverCall);
-
-        console.log("data", data);
-
+        const data = await fetchWithInterval(serverCall) as DetectLanguageResult[];
+        //add checks here
+        const messageLanguage = data[0].language;
         console.log(chatPartner?.socketId);
         console.log("send mess", message);
         socket.emit("message", {
             content: message,
-            to: chatPartner?.socketId
+            language: messageLanguage,
+            to: chatPartner?.username
         });
     };
 
     useEffect(() => {
-        console.log("user", user);
         if (username) {
             socketListener(username, setOnlineUsers); //initialize socket
 
@@ -84,7 +83,7 @@ export default function Home() {
                 }
             })();
         }
-    }, [user, username]);
+    }, [username]);
 
     return (
         <div className="HomeContainer">

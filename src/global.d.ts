@@ -48,3 +48,8 @@ interface Language {
     code: string;
     name: string;
 }
+
+interface DetectLanguageResult {
+    confidence: number;
+    language: string;
+}
