@@ -5,7 +5,7 @@ import { RootState } from "../store/store";
 import address from "../addressConfig";
 import getToken from "../utils/getTokens";
 import fetchWithInterval from "../utils/fetchWithInterval";
-import { uid } from 'uid';
+// import { uid } from 'uid';
 import { socket, socketListener } from "../utils/socketListener";
 import UpdateLanguage from "./UpdateLanguage";
 import { FaBars } from "react-icons/fa";
@@ -22,12 +22,14 @@ export default function Home() {
     const [message, setMessage] = useState("");
     const [openMenu, setOpenMenu] = useState<SlideMenu>(null);
     const [chat, setChat] = useState<Message[]>([]);
+    const [newMessage, setNewMessage] = useState<Message | null>();
 
-    const openRoom = (e: any) => {
-        setChatPartner(onlineUsers.find((obj) => obj.username === e.target.innerText)); //should not be just for online users.
-        const room = uid();
-        socket.emit('join-room', { username, chatPartner: e.target.innerText, room });
-    };
+    // const openRoom = (e: any) => {
+    //     // setChatPartner(onlineUsers.find((obj) => obj.username === e.target.innerText)); //should not be just for online users
+    //     // if (newMessage) setChat([...chat, newMessage]);
+    //     // const room = uid();
+    //     // socket.emit('join-room', { username, chatPartner: e.target.innerText, room });
+    // };
 
     const sendMessage = async () => {
 
@@ -60,7 +62,7 @@ export default function Home() {
 
     useEffect(() => {
         if (username) {
-            socketListener(username, setOnlineUsers, setChat); //initialize socket
+            socketListener(username, setOnlineUsers, setChat, setNewMessage); //initialize socket
 
             //retrieve all users, just for ex.
             (async () => {
@@ -88,6 +90,15 @@ export default function Home() {
         }
     }, [username]);
 
+    useEffect(() => {
+        if (chatPartner) {
+            //fetch chat, setChat
+            if (newMessage) setChat([...chat, newMessage]); //provvisorio
+            setNewMessage(null);
+        }
+
+    }, [chatPartner, newMessage, chat]);
+
     return (
         <div className="HomeContainer">
             <div className="leftCol">
@@ -114,8 +125,10 @@ export default function Home() {
                             {users && users.map((usr, idx) => {
                                 if (usr.username !== user.username) {
                                     return (
-                                        <div key={idx} className="userContainer" onClick={(e) => openRoom(e)}>
+                                        <div key={idx} className="userContainer" onClick={() => setChatPartner({ username: usr.username, socketId: "" })}>
                                             <p className="username" style={onlineUsers.some((contactObj: OnlineUser) => contactObj.username === usr.username) ? { color: "white" } : { color: "red", opacity: 0.5 }}>{usr.username}</p>
+                                            {newMessage && newMessage.sender === usr.username && <p>{newMessage.content}</p>}
+                                            {newMessage && newMessage.sender === usr.username && <div className="redCircle"></div>}
                                         </div>
                                     );
                                 } else {

@@ -3,7 +3,7 @@ import address from "../addressConfig";
 
 export let socket: Socket;
 
-export async function socketListener(username: string, setOnlineUsers: any, setChat: any) {
+export async function socketListener(username: string, setOnlineUsers: any, setChat: any, setNewMessage: any) {
 
     socket = io(address, { transports: ["websocket"], query: { username } });
 
@@ -25,12 +25,14 @@ export async function socketListener(username: string, setOnlineUsers: any, setC
             sender: from
         };
 
-        setChat((prevChat: any) => {
-            return [
-                ...prevChat,
-                message
-            ];
-        });
+        setNewMessage(message);
+
+        // setChat((prevChat: any) => {
+        //     return [
+        //         ...prevChat,
+        //         message
+        //     ];
+        // });
     });
 
     socket.on("socket-duplicate", () => {
