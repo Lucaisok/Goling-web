@@ -15,8 +15,8 @@ type SlideMenu = null | boolean;
 
 export default function Home() {
     const user = useSelector((state: RootState) => state.user);
-    const { username } = user;
-    const [users, setUsers] = useState<Usernames[]>([]);
+    const { username, id } = user;
+    const [users, setUsers] = useState<Username[]>([]);
     const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
     const [chatPartner, setChatPartner] = useState<OnlineUser>();
     const [message, setMessage] = useState("");
@@ -30,6 +30,38 @@ export default function Home() {
     //     // const room = uid();
     //     // socket.emit('join-room', { username, chatPartner: e.target.innerText, room });
     // };
+
+    const selectChat = async (usr: Username) => {
+
+        setChatPartner({ username: usr.username, socketId: "" });
+
+        if (newMessage) setNewMessage(null);
+
+        try {
+            const token = await getToken();
+
+            if (token) {
+
+                const serverCall = () => {
+                    return fetch(address + `/chat?userId=${id}&chatPartnerUsername=${usr.username}`, {
+                        method: 'GET',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
+                            "authorization": token
+                        }
+                    });
+                };
+
+                const data = await fetchWithInterval(serverCall) as Message[];
+                setChat(data);
+            }
+
+        } catch (err) {
+            console.log("err", err);
+
+        }
+    };
 
     const sendMessage = async () => {
 
@@ -56,13 +88,13 @@ export default function Home() {
             to: chatPartner?.username
         });
 
-        setChat([...chat, { content: message, sender: username }]);
+        setChat([...chat, { original_body: message, sender: username, receiver: chatPartner?.username, original_language: messageLanguage, created_at: new Date() }]);
         setMessage("");
     };
 
     useEffect(() => {
         if (username) {
-            socketListener(username, setOnlineUsers, setChat, setNewMessage); //initialize socket
+            socketListener(username, id, setOnlineUsers, setNewMessage); //initialize socket
 
             //retrieve all users, just for ex.
             (async () => {
@@ -82,22 +114,20 @@ export default function Home() {
                         });
                     };
 
-                    const data = await fetchWithInterval(serverCall) as Usernames[];
+                    const data = await fetchWithInterval(serverCall) as Username[];
 
                     setUsers(data);
                 }
             })();
         }
-    }, [username]);
+    }, [username, id]);
 
     useEffect(() => {
-        if (chatPartner) {
-            //fetch chat, setChat
-            if (newMessage) setChat([...chat, newMessage]); //provvisorio
+        if (newMessage && (newMessage.sender === chatPartner?.username)) {
+            setChat([...chat, newMessage]);
             setNewMessage(null);
         }
-
-    }, [chatPartner, newMessage, chat]);
+    }, [newMessage, chat, chatPartner?.username]);
 
     return (
         <div className="HomeContainer">
@@ -125,9 +155,9 @@ export default function Home() {
                             {users && users.map((usr, idx) => {
                                 if (usr.username !== user.username) {
                                     return (
-                                        <div key={idx} className="userContainer" onClick={() => setChatPartner({ username: usr.username, socketId: "" })}>
+                                        <div key={idx} className="userContainer" onClick={() => selectChat(usr)}>
                                             <p className="username" style={onlineUsers.some((contactObj: OnlineUser) => contactObj.username === usr.username) ? { color: "white" } : { color: "red", opacity: 0.5 }}>{usr.username}</p>
-                                            {newMessage && newMessage.sender === usr.username && <p>{newMessage.content}</p>}
+                                            {newMessage && newMessage.sender === usr.username && <p>{newMessage.translated_body}</p>}
                                             {newMessage && newMessage.sender === usr.username && <div className="redCircle"></div>}
                                         </div>
                                     );
@@ -161,7 +191,7 @@ export default function Home() {
                     {chat && chat.map((msg, idx) => {
                         return (
                             <div key={idx} className={"messageRow " + (msg.sender === username ? "ownMessage" : "partnerMessage")}>
-                                <p>{msg.content}</p>
+                                {msg.sender === username ? <p>{msg.original_body}</p> : <p>{msg.translated_body}</p>}
                             </div>
                         );
                     })}

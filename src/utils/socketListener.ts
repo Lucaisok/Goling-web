@@ -3,9 +3,9 @@ import address from "../addressConfig";
 
 export let socket: Socket;
 
-export async function socketListener(username: string, setOnlineUsers: any, setChat: any, setNewMessage: any) {
+export async function socketListener(username: string, id: string, setOnlineUsers: any, setNewMessage: any) {
 
-    socket = io(address, { transports: ["websocket"], query: { username } });
+    socket = io(address, { transports: ["websocket"], query: { username, id } });
 
     socket.onAny((event) => {
         console.log('socketEvent:', event, "user: ", username);
@@ -21,18 +21,11 @@ export async function socketListener(username: string, setOnlineUsers: any, setC
 
     socket.on("message", ({ content, from }) => {
         const message = {
-            content,
+            translated_body: content,
             sender: from
         };
 
         setNewMessage(message);
-
-        // setChat((prevChat: any) => {
-        //     return [
-        //         ...prevChat,
-        //         message
-        //     ];
-        // });
     });
 
     socket.on("socket-duplicate", () => {

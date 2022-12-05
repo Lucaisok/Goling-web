@@ -35,7 +35,7 @@ interface ServerResponse {
     serverError: boolean;
 }
 
-interface Usernames {
+interface Username {
     username: string;
 }
 
@@ -55,6 +55,12 @@ interface DetectLanguageResult {
 }
 
 interface Message {
-    content: string;
+    id?: number;
     sender: string;
+    receiver?: string;
+    original_body?: string;
+    translated_body?: string;
+    original_language?: string;
+    translation_language?: string;
+    created_at?: object;
 }
