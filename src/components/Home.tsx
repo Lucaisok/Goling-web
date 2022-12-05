@@ -5,7 +5,6 @@ import { RootState } from "../store/store";
 import address from "../addressConfig";
 import getToken from "../utils/getTokens";
 import fetchWithInterval from "../utils/fetchWithInterval";
-// import { uid } from 'uid';
 import { socket, socketListener } from "../utils/socketListener";
 import UpdateLanguage from "./UpdateLanguage";
 import { FaBars } from "react-icons/fa";
@@ -23,13 +22,6 @@ export default function Home() {
     const [openMenu, setOpenMenu] = useState<SlideMenu>(null);
     const [chat, setChat] = useState<Message[]>([]);
     const [newMessage, setNewMessage] = useState<Message | null>();
-
-    // const openRoom = (e: any) => {
-    //     // setChatPartner(onlineUsers.find((obj) => obj.username === e.target.innerText)); //should not be just for online users
-    //     // if (newMessage) setChat([...chat, newMessage]);
-    //     // const room = uid();
-    //     // socket.emit('join-room', { username, chatPartner: e.target.innerText, room });
-    // };
 
     const selectChat = async (usr: Username) => {
 
