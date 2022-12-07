@@ -221,6 +221,7 @@ button {
   background-color: aliceblue;
   position: relative;
   z-index: 2;
+  overflow-y: scroll;
 }
 
 .chatInputContainer {

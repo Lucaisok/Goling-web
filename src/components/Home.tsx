@@ -19,21 +19,33 @@ export default function Home() {
     const [message, setMessage] = useState("");
     const [openMenu, setOpenMenu] = useState<SlideMenu>(null);
     const [chat, setChat] = useState<Message[]>([]);
-    // const [newMessage, setNewMessage] = useState<Message | null>();
+    const [newMessage, setNewMessage] = useState<Message | null>();
     const [unreadMessagesArray, setUnreadMessagesArray] = useState<UnreadMessage[]>([]);
 
     const selectChat = async (usr: Username) => {
 
         setChatPartner({ username: usr.username, socketId: "" });
 
-        // if (newMessage) {
-        //     setNewMessage(null);
-        // }
+        localStorage.setItem("chatPartner", usr.username);
 
         try {
             const token = await getToken();
 
             if (token) {
+
+                const serverCall = () => {
+                    return fetch(address + `/chat?userId=${id}&chatPartnerUsername=${usr.username}`, {
+                        method: 'GET',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
+                            "authorization": token
+                        }
+                    });
+                };
+
+                const data = await fetchWithInterval(serverCall) as Message[];
+                setChat(data);
 
                 if (unreadMessagesArray.filter((msg: UnreadMessage) => msg.sender === usr.username).length) {
                     setUnreadMessagesArray(unreadMessagesArray.filter((msg: UnreadMessage) => msg.sender !== usr.username));
@@ -56,20 +68,6 @@ export default function Home() {
 
                     await fetchWithInterval(serverCall);
                 }
-
-                const serverCall = () => {
-                    return fetch(address + `/chat?userId=${id}&chatPartnerUsername=${usr.username}`, {
-                        method: 'GET',
-                        headers: {
-                            Accept: 'application/json',
-                            'Content-Type': 'application/json',
-                            "authorization": token
-                        }
-                    });
-                };
-
-                const data = await fetchWithInterval(serverCall) as Message[];
-                setChat(data);
             }
 
         } catch (err) {
@@ -109,7 +107,7 @@ export default function Home() {
 
     useEffect(() => {
         if (username) {
-            socketListener(username, id, setOnlineUsers, unreadMessagesArray, setUnreadMessagesArray, chatPartner, chat, setChat); //initialize socket
+            socketListener(username, id, setOnlineUsers, setNewMessage); //initialize socket
 
             //retrieve all users, just for ex.
             (async () => {
@@ -143,36 +141,52 @@ export default function Home() {
         }
     }, [username, id]);
 
-    // useEffect(() => {
-    //     if (newMessage && (newMessage.sender === chatPartner?.username)) {
-    //         setChat([...chat, newMessage]);
-    //         setNewMessage(null);
+    useEffect(() => {
+        //this fires when we receive a new message
+        if (newMessage) {
+            if (newMessage.sender === chatPartner?.username) {
+                //we are alkready talking with the sender, just update chat
+                setChat([...chat, newMessage]);
+                setNewMessage(null);
 
-    //     } else if (newMessage) {
+            } else {
+                //we are not talking with the user, update unread messages
+                const unreadMessFromSameUser = unreadMessagesArray.filter(msg => msg.sender === newMessage.sender);
+                if (unreadMessFromSameUser.length) {
+                    //we already have unread mess from this user, update his last unread mess.
+                    const count = unreadMessFromSameUser[0].numberOfUnreadMessages + 1;
+                    let newMessagesArray = unreadMessagesArray.filter(mess => mess.id !== unreadMessFromSameUser[0].id);
+                    const newMess = {
+                        sender: newMessage.sender,
+                        id: newMessage.id,
+                        numberOfUnreadMessages: count,
+                        body: newMessage.translated_body
+                    };
+                    newMessagesArray.push(newMess);
+                    setUnreadMessagesArray(newMessagesArray);
+                    setNewMessage(null);
+                } else {
+                    //no previous unread mess from this user, push it to unread mess
+                    const message: UnreadMessage = {
+                        body: newMessage.translated_body,
+                        sender: newMessage.sender,
+                        id: newMessage.id,
+                        numberOfUnreadMessages: 1
+                    };
+                    setUnreadMessagesArray([...unreadMessagesArray, message]);
+                    setNewMessage(null);
+                }
+            }
+        }
 
-    //         for (let i = 0; i < unreadMessagesArray.length; i++) {
-    //             if (unreadMessagesArray[i].sender === newMessage.sender) {
-
-    //                 let newUnreadArray = unreadMessagesArray.filter(msg => msg !== unreadMessagesArray[i]);
-    //                 unreadMessagesArray[i] = {
-    //                     id: newMessage.id,
-    //                     body: newMessage.translated_body,
-    //                     sender: newMessage.sender,
-    //                     numberOfUnreadMessages: unreadMessagesArray[i].numberOfUnreadMessages + 1
-    //                 };
-
-    //                 newUnreadArray.push(unreadMessagesArray[i]);
-    //                 setUnreadMessagesArray(newUnreadArray);
-    //                 setNewMessage(null);
-    //             }
-    //         }
-
-    //     }
-    // }, [newMessage, chat, chatPartner?.username]);
+    }, [newMessage]);
 
     useEffect(() => {
         //check for unread messages on page load
         (async () => {
+            let unreadMessages: UnreadMessage[] = [];
+            let senderGroupedMessagesObject: UnreadMessage;
+
             try {
                 const token = await getToken();
 
@@ -190,9 +204,6 @@ export default function Home() {
                     };
 
                     const data = await fetchWithInterval(serverCall) as Message[];
-
-                    let unreadMessages: UnreadMessage[] = [];
-                    let senderGroupedMessagesObject: UnreadMessage;
 
                     for (let i = 0; i < data.length; i++) {
 
@@ -237,15 +248,47 @@ export default function Home() {
                         }
 
                     }
-
                     setUnreadMessagesArray(unreadMessages);
                 }
 
             } catch (err) {
                 console.log("err", err);
 
+            } finally {
+                const partner = localStorage.getItem("chatPartner");
+
+                if (partner) {
+                    selectChat({ username: partner });
+
+                    if (unreadMessages.length) {
+                        const token = await getToken();
+
+                        if (token) {
+                            setUnreadMessagesArray(unreadMessages.filter((msg: UnreadMessage) => msg.sender !== partner));
+                            //update db, everything read for this conversation.
+                            const serverCall = () => {
+                                return fetch(address + `/update-message-unread-flag`, {
+                                    method: 'POST',
+                                    headers: {
+                                        Accept: 'application/json',
+                                        'Content-Type': 'application/json',
+                                        "authorization": token
+                                    },
+                                    body: JSON.stringify({
+                                        userId: id,
+                                        chatPartnerUsername: partner
+                                    })
+                                });
+                            };
+
+                            await fetchWithInterval(serverCall);
+                        }
+                    }
+                }
             }
+
         })();
+
     }, []);
 
     return (
@@ -286,13 +329,10 @@ export default function Home() {
                                                             </div>
                                                         </div>
                                                     );
+                                                } else {
+                                                    return null;
                                                 }
                                             })}
-                                            {/* {newMessage && newMessage.sender === usr.username &&
-                                                    <div>
-                                                        <p>{newMessage.translated_body}</p>
-                                                        <div className="redCircle"></div>
-                                                    </div>} */}
                                         </div>
                                     );
                                 } else {
