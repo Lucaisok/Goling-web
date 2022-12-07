@@ -221,6 +221,7 @@ button {
   background-color: aliceblue;
   position: relative;
   z-index: 2;
+  overflow-y: scroll;
 }
 
 .chatInputContainer {
@@ -292,10 +293,18 @@ button {
 }
 
 .redCircle {
-  width: 10px;
-  height: 10px;
-  background-color: red;
+  width: 25px;
+  height: 25px;
+  background-color: #315477;
   border-radius: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.redCircle p {
+  margin: 0;
+  color:  white;
 }
 
 .hamburgerMenu {
@@ -367,5 +376,17 @@ button {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+}
+
+.unreadMessagePreviewContainer {
+  width: inherit;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.unreadMessagePreviewContainer p {
+  color: white;
 }
 

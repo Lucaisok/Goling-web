@@ -55,12 +55,21 @@ interface DetectLanguageResult {
 }
 
 interface Message {
-    id?: number;
+    id: number;
     sender: string;
     receiver?: string;
     original_body?: string;
-    translated_body?: string;
+    translated_body: string;
     original_language?: string;
     translation_language?: string;
     created_at?: object;
+}
+
+type SlideMenu = null | boolean;
+
+interface UnreadMessage {
+    id: number;
+    sender: string;
+    body: string;
+    numberOfUnreadMessages: number;
 }

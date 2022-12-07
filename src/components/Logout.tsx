@@ -6,7 +6,9 @@ export default function Logout() {
     const dispatch = useDispatch();
 
     const logout = () => {
+        const partner = localStorage.getItem("chatPartner");
         localStorage.clear();
+        if (partner) localStorage.setItem("chatPartner", partner);
         socket.disconnect();
         dispatch(userLoggedOut());
     };

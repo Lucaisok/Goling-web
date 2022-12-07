@@ -19,10 +19,12 @@ export async function socketListener(username: string, id: string, setOnlineUser
         setOnlineUsers(users);
     });
 
-    socket.on("message", ({ content, from }) => {
+    socket.on("message", ({ content, from, id }) => {
+
         const message = {
             translated_body: content,
-            sender: from
+            sender: from,
+            id
         };
 
         setNewMessage(message);
